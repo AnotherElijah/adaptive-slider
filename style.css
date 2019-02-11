@@ -4,36 +4,3 @@ body {
     flex-direction: column;
     align-items: center;
 }
-section img {
-    transition: all 1.5s ease;
-    overflow: hidden;
-}
-/*
-.move {
-  transform: translate3d(20px, 0px, 0px);
-}*/
-section div {
-    display: inline-block;
-}
-
-#visible img:last-child,
-#visible img:first-child {
-    opacity: 0.5;
-}
-
-#wrapper-0,
-#wrapper-1,
-#wrapper-2{
-    transition: all 0.8s ease-in;
-}
-#wrapper-0{
-    background: red;
-}
-
-#wrapper-1{
-    background: green;
-}
-
-#wrapper-2{
-    background: blue;
-}
