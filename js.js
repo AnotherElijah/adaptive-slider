@@ -1,18 +1,18 @@
-
-function photos(incoming, elemW, visibleNum) {
+function photos(incoming, elemW, visibleNum, step) {
 
     sliderParams = {
         elemW: elemW,
         mainTrackW: elemW * incoming.length * 3,
         visibleNum: visibleNum,
-        number: incoming.length
+        number: incoming.length,
+        step: step
     };
 
     sliderSets = {
-        pushStyle(parentContainer, transitionTiming = 'ease'){
+        pushStyle(parentContainer, transitionTiming = 'ease') {
             let imgElems = document.querySelectorAll(`${parentContainer} img`);
             imgElems.map(
-                (elem, i)=>{
+                (elem, i) => {
                     elem.style.cssText = `transition-timing-function: ${transitionTiming}`;
                 }
             )
@@ -30,8 +30,10 @@ function photos(incoming, elemW, visibleNum) {
 
         const mainTrack = document.createElement('section');
         mainTrack.id = 'main-track';
-        mainTrack.style.cssText = `width: ${sliderParams.mainTrackW}px;`;/***********CSS**********/
-        document.querySelector('.carouselContainer').style.cssText = `width: ${sliderParams.elemW*sliderParams.visibleNum}px; overflow: hidden;`;/***********CSS**********/
+        mainTrack.style.cssText = `width: ${sliderParams.mainTrackW}px;`;
+        /***********CSS**********/
+        document.querySelector('.carouselContainer').style.cssText = `width: ${sliderParams.elemW * sliderParams.visibleNum}px; overflow: hidden;`;
+        /***********CSS**********/
         document.body.firstElementChild.appendChild(mainTrack);
         const parentContainer = document.querySelector("#main-track");
 
@@ -65,28 +67,24 @@ function photos(incoming, elemW, visibleNum) {
     this.forward = (incoming, elemW, numberOfSlides) => {
 
         let counter = 1;
-        let z = 1;
         const section = document.querySelector("#main-track");
         const position = [
-            [elemW * incoming.length, 2],
-            [elemW * incoming.length, 2],
-            [elemW * incoming.length, 2]];
+            [elemW * incoming.length, 1],
+            [elemW * incoming.length, 1],
+            [elemW * incoming.length, 1]];
 
-        document.querySelector(".move").onclick = () => {
-
+        let makeStep = (step) => {
             section.childNodes[0].style.cssText = `transform: translate3d(${-position[0][0] - (position[0][1] * elemW)}px, 0px, 0px)`;
             position[0][1] += 1;
             section.childNodes[1].style.cssText = `transform: translate3d(${-position[1][0] - (position[1][1] * elemW)}px, 0px, 0px)`;
             position[1][1] += 1;
             section.childNodes[2].style.cssText = `transform: translate3d(${-position[2][0] - (position[2][1] * elemW)}px, 0px, 0px)`;
             position[2][1] += 1;
-
             counter++;
-
             if (counter % sliderParams.number === 0) {
                 switch (counter / sliderParams.number) {
                     case 1:
-                        position[0][1] = -sliderParams.number*2;
+                        position[0][1] = -sliderParams.number * 2;
                         break;
                     case 2:
                         position[0][1] = -sliderParams.number;
@@ -100,7 +98,13 @@ function photos(incoming, elemW, visibleNum) {
                         break;
                 }
             }
+            step--;
+            step > 0? makeStep(step) : null;
         };
+        document.querySelector(".move").onclick = () => {
+            makeStep(sliderParams.step);
+        };
+
     };
 
     document.body.onload = () => this.forward(incoming, elemW, sliderParams.number);
@@ -117,6 +121,6 @@ let incoming = [
     "https://i.kym-cdn.com/entries/icons/mobile/000/025/734/7GXG21i.jpg"
 ];
 
-let example = new photos(incoming, 200, 3);
+let example = new photos(incoming, 200, 5, 4);
 
 example.render();

@@ -5,7 +5,7 @@ body {
     align-items: center;
 }
 section img {
-    transition: all 0.4s ease-in-out;
+    transition: all 1.5s ease;
     overflow: hidden;
 }
 /*
@@ -24,7 +24,7 @@ section div {
 #wrapper-0,
 #wrapper-1,
 #wrapper-2{
-    transition: all 0.4s ease-in-out;
+    transition: all 0.8s ease-in;
 }
 #wrapper-0{
     background: red;
