@@ -1,0 +1,39 @@
+body {
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+section img {
+    transition: all 0.4s ease-in-out;
+    overflow: hidden;
+}
+/*
+.move {
+  transform: translate3d(20px, 0px, 0px);
+}*/
+section div {
+    display: inline-block;
+}
+
+#visible img:last-child,
+#visible img:first-child {
+    opacity: 0.5;
+}
+
+#wrapper-0,
+#wrapper-1,
+#wrapper-2{
+    transition: all 0.4s ease-in-out;
+}
+#wrapper-0{
+    background: red;
+}
+
+#wrapper-1{
+    background: green;
+}
+
+#wrapper-2{
+    background: blue;
+}
