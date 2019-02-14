@@ -11,13 +11,11 @@ function Slider(incoming, elemW, visibleNum, step, parameters) {
     sliderConstantStyles = () => {
         document.body.insertAdjacentHTML("beforeEnd", "<style></style>");
         let styleTag = document.getElementsByTagName('style')[0];
-
         styleTag.insertAdjacentHTML('beforeEnd', '#carouselContainer section div{display: inline-block; ' +
             'position: relative; ' +
             'z-index: 3;}');
         styleTag.insertAdjacentHTML('beforeEnd', '.hidden{visibility: hidden; transition: all 0.0s ease!important;}');
         styleTag.insertAdjacentHTML('beforeEnd', '.transit{transition: transform 0s!important;}');
-
     };
 
     sliderSets = (duration = 0.7, transitionTiming = 'ease') => {
@@ -25,6 +23,7 @@ function Slider(incoming, elemW, visibleNum, step, parameters) {
         imgElems = Array.from(imgElems);
         imgElems.map(() => document.getElementsByTagName('style')[0].insertAdjacentHTML('beforeEnd', `#main-track div{ transition: transform ${duration}s ${transitionTiming};}`));
     };
+
     /*incoming url => DOM elems*/
     args = incoming.map((link, i) => {
         return `<img width='${sliderParams.elemW}px' id="pic${i}" src=${link}>`;
@@ -37,11 +36,12 @@ function Slider(incoming, elemW, visibleNum, step, parameters) {
         mainTrack.id = 'main-track';
         mainTrack.style.cssText = `width: ${sliderParams.mainTrackW}px;`;
 
-        document.querySelector('#carouselContainer').style.cssText = `width: ${sliderParams.elemW * sliderParams.visibleNum}px; overflow: hidden;`;
+        document.querySelector('#carouselContainer').style.cssText = `width: ${(sliderParams.elemW * sliderParams.visibleNum)-sliderParams.elemW*1}px; overflow: hidden;`;
         /***********CSS**********/
 
         document.body.firstElementChild.appendChild(mainTrack);
         /***********CSS**********/
+
         const parentContainer = document.querySelector("#main-track");
 
         for (let i = 0; i <= 2; i++) {
@@ -51,7 +51,9 @@ function Slider(incoming, elemW, visibleNum, step, parameters) {
 
             document.querySelector(`#wrapper-${i}`).insertAdjacentHTML("afterBegin", args);
         }
+
         this.centralize(parentContainer);
+
         sliderConstantStyles();
         sliderSets(parameters.duration, parameters.transitionTiming);
     };
@@ -60,25 +62,19 @@ function Slider(incoming, elemW, visibleNum, step, parameters) {
 
         for (let i = 0; i < parentContainer.childNodes.length; i++) {
             const wrapper = document.querySelector(`#wrapper-${i}`);
-
             if (parentContainer.childNodes[i].nodeType === 3) continue;
-
-            if (i === parentContainer.childNodes.length - 1) {
-                wrapper.style.cssText = `transform: translate3d(-${elemW * incoming.length}px, 0px, 0px)`;
-            } else {
-                wrapper.style.cssText = `transform: translate3d(-${elemW * incoming.length}px, 0px, 0px)`;
-            }
+            if (i !== parentContainer.childNodes.length - 1) wrapper.style.cssText = `transform: translate3d(-${(elemW * incoming.length)+elemW}px, 0px, 0px)`;
         }
-
     };
 
-    this.forward = (incoming, elemW) => {
+    this.spinSlider = (incoming, elemW) => {
 
-        let counter = 0;
         const section = document.querySelector("#main-track");
+
         let wrappsArr = [
             {
-                currentPosition: -(elemW * incoming.length),
+                startPosition: -(elemW * incoming.length),
+                currentPosition: -((elemW * incoming.length)+elemW),
                 visibility: true,
                 makeInvisible(){
                     if(this.visibility === false){
@@ -90,7 +86,8 @@ function Slider(incoming, elemW, visibleNum, step, parameters) {
                 }
             },
             {
-                currentPosition: -(elemW * incoming.length),
+                startPosition: -(elemW * incoming.length),
+                currentPosition: -((elemW * incoming.length)+elemW),
                 visibility: true,
                 makeInvisible(){
                     if(this.visibility === false){
@@ -102,7 +99,8 @@ function Slider(incoming, elemW, visibleNum, step, parameters) {
                 }
             },
             {
-                currentPosition: -(elemW * incoming.length),
+                startPosition: -(elemW * incoming.length),
+                currentPosition: -((elemW * incoming.length)+elemW),
                 visibility: true,
                 makeInvisible(){
                     if(this.visibility === false){
@@ -115,11 +113,28 @@ function Slider(incoming, elemW, visibleNum, step, parameters) {
             }
         ];
 
-        let makeStep = (step) => {
+        let permission = false;
+        let elementToHide;
+
+        let makeStep = (step, event, elemW) => {
+
+            if(event.target.classList.contains('prev')) elemW = -elemW;
 
             let newPosition = wrappsArr.map(item => {
-                return item.currentPosition - elemW
+                return item.currentPosition - elemW*sliderParams.step;
             });
+
+            let hideElem = elem => {
+                console.log(elem);
+                elem.classList.add('transit');
+                setTimeout(()=>{
+                    elem.classList.remove('transit');
+                }, parameters.duration);
+                permission = false;
+            };
+
+            if(permission) hideElem(elementToHide);
+
             section.childNodes[0].style.cssText = `transform: translate3d(${newPosition[0]}px, 0px, 0px);`;
             section.childNodes[1].style.cssText = `transform: translate3d(${newPosition[1]}px, 0px, 0px);`;
             section.childNodes[2].style.cssText = `transform: translate3d(${newPosition[2]}px, 0px, 0px);`;
@@ -127,80 +142,65 @@ function Slider(incoming, elemW, visibleNum, step, parameters) {
             wrappsArr.forEach((elem, i) => {
                 elem.currentPosition = newPosition[i];
             });
-            counter++;
-            console.log(
-                'counter: ' + counter);
 
-            if ((counter) % sliderParams.number === 0 || counter===sliderParams.number*3-1) {
-                switch ((counter) / sliderParams.number) {
-                    case 1:
-                        console.log(
-                            'counter: ' + counter,
-                            'number: '+sliderParams.number,
-                            '(counter) % sliderParams.number = '+(counter) % sliderParams.number
-                        );
-                        section.childNodes[0].classList.add('transit');
-                        setTimeout(()=>{
-                            section.childNodes[0].classList.remove('transit');
-                        }, parameters.duration);
-                        break;
-                    case 2:
-                        console.log(
-                            'counter: ' + counter,
-                            'number: '+sliderParams.number,
-                            '(counter) % sliderParams.number = '+(counter) % sliderParams.number
-                        );
-                        section.childNodes[1].classList.add('transit');
-                        setTimeout(()=>{
-                            section.childNodes[1].classList.remove('transit');
-                        }, parameters.duration);
-                        break;
-                    default:
-                        console.log(
-                            'counter: ' + counter,
-                            'number: '+sliderParams.number,
-                            '(counter) % sliderParams.number = '+(counter) % sliderParams.number
-                        );
-                        section.childNodes[2].classList.add('transit');
-                        setTimeout(()=>{
-                            section.childNodes[2].classList.remove('transit');
-                        }, parameters.duration);
-                        break;
+            let getPosition = (elem) =>{
+                let positionStr = elem.style.transform;
+                positionStr = positionStr.replace('translate3d(', '')
+                    .replace('px, 0px, 0px)', '');
+                return positionStr;
+            };
+
+            let forwardHandler = () =>{
+
+                let elemFarthestPosition = (arr, elem) => {
+                    return (elem.startPosition)+elem.startPosition*(arr.indexOf(elem)+1);
+                };
+
+                let arr = Array.from(section.childNodes);
+
+                arr.forEach(
+                    (elem, i)=>{
+                        if (getPosition(section.childNodes[i])-(elemW*sliderParams.step)<elemFarthestPosition(wrappsArr, wrappsArr[i])){
+                            console.log('move');
+                            wrappsArr[i].currentPosition = (wrappsArr[i].currentPosition + (sliderParams.elemW * incoming.length * 3));
+                            elementToHide = section.childNodes[i];
+                            permission = true;
+                        }
+                    }
+                );
+            };
+
+            let backwardHandler = () =>{
+
+                let elemFarthestPosition = (arr, elem) => {
+                    arr = Array.from(arr);
+                    arr = arr.reverse();
+                    return (elem.startPosition)-elem.startPosition*(arr.indexOf(elem));
+                };
+
+                for(let i = 2; i >= 0; i--){
+                    console.log('i: '+i);
+                    console.log('childnodes'+section.childNodes[i]);
+                    if (getPosition(section.childNodes[i])-(elemW*sliderParams.step)>elemFarthestPosition(wrappsArr, wrappsArr[i])){
+                        console.log(elemFarthestPosition(wrappsArr, wrappsArr[i])+'---'+wrappsArr[i]);
+                        wrappsArr[i].currentPosition = (wrappsArr[i].currentPosition - (sliderParams.elemW * incoming.length * 3));
+                        elementToHide = section.childNodes[i];
+                        permission = true;
+                    }
                 }
-            }
-
-            //if (runMakeVisible.permission === true) runMakeVisible.makeVisible(counter, sliderParams.step);
-
-            if ((counter + 1) % sliderParams.number === 0) {
-                switch ((counter + 1) / sliderParams.number) {
-                    case 1:
-                        wrappsArr[0].currentPosition = (wrappsArr[0].currentPosition + (sliderParams.elemW * incoming.length * 3));
-
-                        break;
-                    case 2:
-                        wrappsArr[1].currentPosition = (wrappsArr[1].currentPosition + (sliderParams.elemW * incoming.length * 3));
-                        break;
-                    case 3:
-                        console.log('***');
-                        wrappsArr[2].currentPosition = (wrappsArr[2].currentPosition + (sliderParams.elemW * incoming.length * 3));
-                        counter = -1;
-                        break;
-                }
-            }
-
-            step--;
-            step > 0 ? makeStep(step) : null;
+            };
+            event.target.classList.contains('next')? forwardHandler():event.target.classList.contains('prev')? backwardHandler():null;
         };
 
-        document.querySelector(".move").onclick = () => {
-            makeStep(sliderParams.step);
-            /*      document.querySelector(".prev").onclick = () => {
-                      makeStepBack(sliderParams.step);*/
+        document.querySelector(".next").onclick = (event) => {
+            makeStep(sliderParams.step, event, elemW);
         };
-
+        document.querySelector(".prev").onclick = (event) => {
+            makeStep(sliderParams.step, event, elemW);
+        }
     };
 
-    document.body.onload = () => this.forward(incoming, elemW, sliderParams.number);
+    document.body.onload = () => this.spinSlider(incoming, elemW, sliderParams.number);
 
 }
 
@@ -210,14 +210,14 @@ let incoming = [
     "https://images.financialexpress.com/2018/07/MAIN-PIC.jpg",
     "https://cgfrog.com/wp-content/uploads/2014/04/play-with-sun-perfect-timing-click.jpg",
     "https://i.kym-cdn.com/entries/icons/mobile/000/025/734/7GXG21i.jpg",
-    "https://cgfrog.com/wp-content/uploads/2014/04/play-with-sun-perfect-timing-click.jpg",
-    "https://i.kym-cdn.com/entries/icons/mobile/000/025/734/7GXG21i.jpg",
-    "https://cgfrog.com/wp-content/uploads/2014/04/play-with-sun-perfect-timing-click.jpg",
-    "https://i.kym-cdn.com/entries/icons/mobile/000/025/734/7GXG21i.jpg",
-    "https://cgfrog.com/wp-content/uploads/2014/04/play-with-sun-perfect-timing-click.jpg",
-    "https://i.kym-cdn.com/entries/icons/mobile/000/025/734/7GXG21i.jpg",
-    "https://cgfrog.com/wp-content/uploads/2014/04/play-with-sun-perfect-timing-click.jpg",
-    "https://i.kym-cdn.com/entries/icons/mobile/000/025/734/7GXG21i.jpg"
+    "https://cgfrog.com/wp-content/uploads/2014/04/play-with-sun-perfect-timing-click.jpg"
+    // "https://i.kym-cdn.com/entries/icons/mobile/000/025/734/7GXG21i.jpg",
+    // "https://cgfrog.com/wp-content/uploads/2014/04/play-with-sun-perfect-timing-click.jpg",
+    // "https://i.kym-cdn.com/entries/icons/mobile/000/025/734/7GXG21i.jpg",
+    // "https://cgfrog.com/wp-content/uploads/2014/04/play-with-sun-perfect-timing-click.jpg",
+    // "https://i.kym-cdn.com/entries/icons/mobile/000/025/734/7GXG21i.jpg",
+    // "https://cgfrog.com/wp-content/uploads/2014/04/play-with-sun-perfect-timing-click.jpg",
+    // "https://i.kym-cdn.com/entries/icons/mobile/000/025/734/7GXG21i.jpg"
 ];
 
 /**********************************************************************temporary*/
@@ -225,7 +225,6 @@ let parameters = new Object();
 parameters.duration = 0.3;
 parameters.transitionTiming = 'ease-in';
 /**********************************************************************************/
-let slider1 = new Slider(incoming, 100, 7, 7, parameters);
+let slider1 = new Slider(incoming, 100, 5, 2, parameters);
 
 slider1.render();
-
