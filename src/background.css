@@ -1,0 +1,29 @@
+body{
+    overflow: hidden;
+    background: #000;
+}
+
+#bg-image{
+    user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    position: absolute;
+    z-index: -1;
+    width: 140%;
+    height: 130vh;
+    filter: blur(20px);
+    opacity: 0.9;
+}
+@media screen and (max-width: 900px){
+    #bg-image{
+        width: 100%;
+        height:auto;
+        display: none;
+    }
+    #main-track{
+
+    }
+}

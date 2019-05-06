@@ -1,0 +1,19 @@
+body{
+    overflow: hidden;
+}
+
+#bg-image{
+    user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    position: absolute;
+    z-index: -1;
+    width: 120%;
+    top: -100px;
+    height: auto;
+    filter: blur(20px);
+    opacity: 0.9;
+}

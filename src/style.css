@@ -1,0 +1,203 @@
+body {
+  font-family: sans-serif;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  height: 94vh; }
+
+button {
+  position: absolute; }
+
+#largeImg-wrapper {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px; }
+  @media screen and (max-width: 900px) {
+    #largeImg-wrapper {
+      display: none;
+      border-top-left-radius: 0px;
+      border-top-right-radius: 0px;
+      border-top-left-radius: 0px;
+      border-top-right-radius: 0px; } }
+
+#largeImg {
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none; }
+
+#wrapper-0 img,
+#wrapper-1 img,
+#wrapper-2 img {
+  vertical-align: top;
+  overflow: hidden; }
+
+#carousel-wrapper {
+  background: rgba(255, 255, 255, 0.4);
+  padding: 30px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; }
+  @media screen and (max-width: 900px) {
+    #carousel-wrapper {
+      padding: 0; } }
+
+#carouselContainer {
+  overflow: hidden;
+  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 15px; }
+  @media screen and (max-width: 900px) {
+    #carouselContainer {
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px; } }
+
+/***largeImg***/
+:root {
+  --changingTransition: all 0.3s; }
+
+.img-change {
+  transition: var(--changingTransition);
+  -webkit-transition: var(--changingTransition);
+  -moz-transition: var(--changingTransition);
+  -ms-transition: var(--changingTransition);
+  -o-transition: var(--changingTransition);
+  -webkit-filter: blur(15px) opacity(15%) !important;
+  filter: blur(15px) opacity(15%) !important; }
+
+.img-change--off {
+  transition: var(--changingTransition);
+  -webkit-transition: var(--changingTransition);
+  -moz-transition: var(--changingTransition);
+  -ms-transition: var(--changingTransition);
+  -o-transition: var(--changingTransition);
+  -webkit-filter: blur(0px) opacity(100%) !important;
+  filter: blur(0px) opacity(100%) !important; }
+
+/*.img-change{
+  transition: all 0.4s;
+  filter: blur(10px) opacity(15%)!important;
+}
+.img-change--off{
+  transition: all 0.4s;
+  filter: blur(0px) opacity(100%)!important;
+}*/
+/*temporary*/
+button.carousel-next {
+  position: absolute;
+  z-index: 5;
+  background: rgba(0, 0, 0, 0);
+  width: 20%;
+  height: 80%;
+  border-radius: 76px;
+  border: 0;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 50px;
+  line-height: 0;
+  padding: 0 0 7px 4px;
+  right: 0;
+  outline: rgba(255, 255, 255, 0); }
+
+.carousel-prev::before {
+  content: '\2039';
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 140px; }
+
+.carousel-next::before {
+  content: '\203a';
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 140px; }
+
+button.carousel-prev {
+  position: absolute;
+  z-index: 5;
+  background: rgba(0, 0, 0, 0);
+  width: 20%;
+  height: 80%;
+  border-radius: 76px;
+  border: 0;
+  font-size: 50px;
+  line-height: 0;
+  padding: 0 4px 7px 0;
+  left: 0;
+  outline: rgba(255, 255, 255, 0); }
+
+.carousel-next:hover:before {
+  color: white;
+  font-size: 142px; }
+
+.carousel-prev:hover:before {
+  color: white;
+  font-size: 142px; }
+
+button.carousel-prev {
+  left: 130px; }
+  @media screen and (max-width: 1600px) {
+    button.carousel-prev {
+      left: 250px; } }
+  @media screen and (max-width: 1400px) {
+    button.carousel-prev {
+      left: 200px; } }
+  @media screen and (max-width: 1200px) {
+    button.carousel-prev {
+      left: 110px; } }
+  @media screen and (max-width: 815px) {
+    button.carousel-prev {
+      left: 10px;
+      width: auto; } }
+
+button.carousel-next {
+  right: 130px; }
+  @media screen and (max-width: 1600px) {
+    button.carousel-next {
+      right: 250px; } }
+  @media screen and (max-width: 1400px) {
+    button.carousel-next {
+      right: 200px; } }
+  @media screen and (max-width: 1200px) {
+    button.carousel-next {
+      right: 110px; } }
+  @media screen and (max-width: 815px) {
+    button.carousel-next {
+      right: 10px;
+      width: auto; } }
+
+@media screen and (max-width: 800px) {
+  .carousel-next::before {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 70px; }
+
+  .carousel-next:hover:before {
+    color: white;
+    font-size: 72px; }
+
+  .carousel-prev::before {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 70px; }
+
+  .carousel-prev:hover:before {
+    color: white;
+    font-size: 72px; } }
+/*temporary*/
+#carousel-next {
+  position: absolute;
+  right: 15px; }
+
+#carousel-prev {
+  position: absolute;
+  left: 15px; }
+
+/*# sourceMappingURL=style.css.map */
